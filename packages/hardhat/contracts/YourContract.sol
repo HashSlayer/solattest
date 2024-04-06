@@ -25,19 +25,19 @@ contract YourContract {
     /// @param attester The attesting account.
     /// @param uid The UID the revoked attestation.
 
-    event Attested(address indexed attester, address indexed recipient, uint256 uid);
+    event Attested(address indexed attester, string indexed recipient, uint256 uid);
 
     /// @notice Emitted when an attestation has been revoked.
     /// @param recipient The recipient of the attestation.
     /// @param attester The attesting account.
     /// @param uid The UID the revoked attestation.
-    event Revoked(address indexed recipient, address indexed attester, uint256 uid);
+    event Revoked(string indexed recipient, address indexed attester, uint256 uid);
 
     struct Attestation {
         uint256 uid; // A unique identifier of the attestation.
         uint256 time; // The time when the attestation was created (Unix timestamp).
         uint256 revocationTime; // The time when the attestation was revoked (Unix timestamp).
-        address recipient; // The recipient of the attestation.
+        string recipient; // The recipient of the attestation.
         address attester; // The attester/sender of the attestation.
         bool revocable; // Whether the attestation is revocable.
         string data; // Custom attestation data.
@@ -58,7 +58,7 @@ contract YourContract {
     /// @param revocable Whether the attestation is revocable.
     /// @param data The custom attestation data.
     /// @return The UID of the new attestation.
-    function attest(address recipient, bool revocable, string calldata data) external returns (uint256) {
+    function attest(string memory recipient, bool revocable, string calldata data) external returns (uint256) {
         uint256 _uid = lastUid++;
         Attestation memory _attestation;
 
@@ -102,7 +102,7 @@ contract YourContract {
     /// @param uid The UID of the attestation to retrieve.
     /// @return The attestation data members.
     function getAttestation(uint256 uid) external view returns (Attestation memory) {
-        if (uid > lastUid || uid == 0) {
+        if (uid > lastUid) {
             revert NotFound();
         }
         return _db[uid];
