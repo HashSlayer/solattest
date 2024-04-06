@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.23;
+//SPDX-License-Identifier: MIT
+pragma solidity >=0.8.0 <0.9.0;
 
 error AccessDenied();
 error NotFound();
@@ -60,7 +60,6 @@ contract YourContract {
     /// @return The UID of the new attestation.
     function attest(address recipient, bool revocable, string calldata data) external returns (uint256) {
         uint256 _uid = lastUid++;
-
         Attestation memory _attestation;
 
         _attestation.uid = _uid;
