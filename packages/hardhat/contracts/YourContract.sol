@@ -44,7 +44,7 @@ contract YourContract {
     }
 
     // The global mapping between attestations and their UIDs.
-    uint256 private lastUid = 0;
+    uint256 private lastUid = 1;
 
     mapping(uint256 uid => Attestation attestation) private _db;
 
