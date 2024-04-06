@@ -1,87 +1,111 @@
-//SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0 <0.9.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.23;
 
-// Useful for debugging. Remove when deploying to a live network.
-import "hardhat/console.sol";
+error AccessDenied();
+error NotFound();
+error AlreadyRevoked();
+error Irrevocable();
+
 
 // Use openzeppelin to inherit battle-tested implementations (ERC20, ERC721, etc)
 // import "@openzeppelin/contracts/access/Ownable.sol";
+// Events: a way to emit log statements from smart contract that can be listened to by external parties
+// Constructor: Called once on contract deployment
+// Check packages/hardhat/deploy/00_deploy_your_contract.ts
+/// @title SolAttest
+/// @notice The Solana Attestations protocol.
 
-/**
- * A smart contract that allows changing a state variable of the contract and tracking the changes
- * It also allows the owner to withdraw the Ether in the contract
- * @author BuidlGuidl
- */
 contract YourContract {
-	// State Variables
+    uint256 constant EMPTY_UID = 0;
+    uint64 constant NO_EXPIRATION_TIME = 0;
 	address public immutable owner;
-	string public greeting = "Building Unstoppable Apps!!!";
-	bool public premium = false;
-	uint256 public totalCounter = 0;
-	mapping(address => uint) public userGreetingCounter;
 
-	// Events: a way to emit log statements from smart contract that can be listened to by external parties
-	event GreetingChange(
-		address indexed greetingSetter,
-		string newGreeting,
-		bool premium,
-		uint256 value
-	);
+    /// @notice Emitted when an attestation has been made.
+    /// @param recipient The recipient of the attestation.
+    /// @param attester The attesting account.
+    /// @param uid The UID the revoked attestation.
 
-	// Constructor: Called once on contract deployment
-	// Check packages/hardhat/deploy/00_deploy_your_contract.ts
-	constructor(address _owner) {
-		owner = _owner;
+    event Attested(address indexed attester, address indexed recipient, uint256 uid);
+
+    /// @notice Emitted when an attestation has been revoked.
+    /// @param recipient The recipient of the attestation.
+    /// @param attester The attesting account.
+    /// @param uid The UID the revoked attestation.
+    event Revoked(address indexed recipient, address indexed attester, uint256 uid);
+
+    struct Attestation {
+        uint256 uid; // A unique identifier of the attestation.
+        uint256 time; // The time when the attestation was created (Unix timestamp).
+        uint256 revocationTime; // The time when the attestation was revoked (Unix timestamp).
+        address recipient; // The recipient of the attestation.
+        address attester; // The attester/sender of the attestation.
+        bool revocable; // Whether the attestation is revocable.
+        string data; // Custom attestation data.
+    }
+
+    // The global mapping between attestations and their UIDs.
+    uint256 private lastUid = 0;
+
+    mapping(uint256 uid => Attestation attestation) private _db;
+
+    /// @dev Creates a new SolAttest instance.
+    constructor(address _owner) {
+	owner = _owner;
 	}
 
-	// Modifier: used to define a set of rules that must be met before or after a function is executed
-	// Check the withdraw() function
-	modifier isOwner() {
-		// msg.sender: predefined variable that represents address of the account that called the current function
-		require(msg.sender == owner, "Not the Owner");
-		_;
-	}
+    /// @notice Attests to a specific schema.
+    /// @param recipient The recipient of the attestation.
+    /// @param revocable Whether the attestation is revocable.
+    /// @param data The custom attestation data.
+    /// @return The UID of the new attestation.
+    function attest(address recipient, bool revocable, string calldata data) external returns (uint256) {
+        uint256 _uid = lastUid++;
 
-	/**
-	 * Function that allows anyone to change the state variable "greeting" of the contract and increase the counters
-	 *
-	 * @param _newGreeting (string memory) - new greeting to save on the contract
-	 */
-	function setGreeting(string memory _newGreeting) public payable {
-		// Print data to the hardhat chain console. Remove when deploying to a live network.
-		console.log(
-			"Setting new greeting '%s' from %s",
-			_newGreeting,
-			msg.sender
-		);
+        Attestation memory _attestation;
 
-		// Change state variables
-		greeting = _newGreeting;
-		totalCounter += 1;
-		userGreetingCounter[msg.sender] += 1;
+        _attestation.uid = _uid;
+        _attestation.attester = msg.sender;
+        _attestation.recipient = recipient;
+        _attestation.data = data;
+        _attestation.time = block.timestamp;
+        _attestation.revocable = revocable;
 
-		// msg.value: built-in global variable that represents the amount of ether sent with the transaction
-		if (msg.value > 0) {
-			premium = true;
-		} else {
-			premium = false;
-		}
+        _db[_uid] = _attestation;
 
-		// emit: keyword used to trigger an event
-		emit GreetingChange(msg.sender, _newGreeting, msg.value > 0, msg.value);
-	}
+        emit Attested(msg.sender, recipient, _uid);
 
-	/**
-	 * Function that allows the owner to withdraw all the Ether in the contract
-	 * The function can only be called by the owner of the contract as defined by the isOwner modifier
-	 */
-	function withdraw() public isOwner {
-		(bool success, ) = owner.call{ value: address(this).balance }("");
-		require(success, "Failed to send Ether");
-	}
+        return _uid;
+    }
 
-	/**
-	 * Function that allows the contract to receive ETH
-	 */
-	receive() external payable {}
+    function revoke(uint256 uid) external {
+        Attestation storage attestation = _db[uid];
+
+        if (attestation.uid == 0) {
+            revert NotFound();
+        }
+
+        if (attestation.attester != msg.sender) {
+            revert AccessDenied();
+        }
+
+        if (attestation.revocationTime != 0) {
+            revert AlreadyRevoked();
+        }
+
+        if (!attestation.revocable) {
+            revert Irrevocable();
+        }
+
+        attestation.revocationTime = block.timestamp;
+    }
+
+    /// @notice Returns an existing attestation by UID.
+    /// @param uid The UID of the attestation to retrieve.
+    /// @return The attestation data members.
+    function getAttestation(uint256 uid) external view returns (Attestation memory) {
+        if (uid > lastUid || uid == 0) {
+            revert NotFound();
+        }
+        return _db[uid];
+    }
 }
