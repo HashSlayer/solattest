@@ -41,7 +41,7 @@ export const displayTxResult = (
   if (Array.isArray(displayContent)) {
     const mostReadable = (v: DisplayContent) =>
       ["number", "boolean"].includes(typeof v) ? v : displayTxResultAsText(v);
-    const displayable = JSON.stringify(displayContent.map(mostReadable), replacer);
+    const displayable = JSON.stringify(displayContent.map(mostReadable), replacer, 2);
 
     return asText ? (
       displayable
