@@ -30,7 +30,7 @@ const Home: NextPage = () => {
 
             <p>
               Make or review Solana Attestations{" "}
-              <Link href="/debug" passHref className="link">
+              <Link href="/attest" passHref className="link">
                 Solana Attestation
               </Link>{" "}
             </p>
