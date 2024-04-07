@@ -54,8 +54,8 @@ export const Header = () => {
             <Image alt="SE2 logo" className="cursor-pointer" fill src="/logo.svg" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold leading-tight">Team Solahonor</span>
-            <span className="text-xs">Solana Attestation Services</span>
+            <span className="font-bold leading-tight">{"Sol'Attest"}</span>
+            <span className="text-xs">Team Solahonor</span>
           </div>
         </Link>
       </div>
