@@ -43,11 +43,15 @@ export const displayTxResult = (
       ["number", "boolean"].includes(typeof v) ? v : displayTxResultAsText(v);
     const displayable = JSON.stringify(displayContent.map(mostReadable), replacer, 2);
 
-    return asText ? (
-      displayable
-    ) : (
-      <span style={{ overflowWrap: "break-word", width: "100%" }}>{displayable.replaceAll(",", ",\n")}</span>
-    );
+    try {
+      return JSON.stringify(displayContent, replacer, 2);
+    } catch (e) {
+      return asText ? (
+        displayable
+      ) : (
+        <span style={{ overflowWrap: "break-word", width: "100%" }}>{displayable.replaceAll(",", ",\n")}</span>
+      );
+    }
   }
 
   return JSON.stringify(displayContent, replacer, 2);
