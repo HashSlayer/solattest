@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { BarsArrowUpIcon } from "@heroicons/react/20/solid";
-import { ContractUI } from "~~/app/debug/_components/contract";
+import { ContractUI } from "~~/app/attest/_components/contract";
 import { ContractName } from "~~/utils/scaffold-eth/contract";
 import { getAllContracts } from "~~/utils/scaffold-eth/contractsData";
 
@@ -53,11 +53,7 @@ export function DebugContracts() {
             </div>
           )}
           {contractNames.map(contractName => (
-            <ContractUI
-              key={contractName}
-              contractName={contractName}
-              className={contractName === selectedContract ? "" : "hidden"}
-            />
+            <ContractUI key={contractName} contractName={contractName} />
           ))}
         </>
       )}

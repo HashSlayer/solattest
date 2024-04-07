@@ -21,7 +21,7 @@ module.exports = {
           "base-300": "#4E3C5C",
           "base-content": "#000000",
           "window-bg": "#000000",
-"window-text": "#000000",
+          "window-text": "#000000",
           info: "#06fc99",
           success: "#34EEB6",
           warning: "#FFCF72",
