@@ -107,4 +107,46 @@ contract YourContract {
         }
         return _db[uid];
     }
+
+    function attestationsByRecipient(string memory recipient) external view returns (Attestation[] memory) {
+        uint256 count = 0;
+        for (uint256 i = 1; i < lastUid; i++) {
+            if (keccak256(abi.encodePacked(_db[i].recipient)) == keccak256(abi.encodePacked(recipient))) {
+                count++;
+            }
+        }
+
+        Attestation[] memory result = new Attestation[](count);
+        uint256 index = 0;
+        for (uint256 i = 1; i < lastUid; i++) {
+            if (keccak256(abi.encodePacked(_db[i].recipient)) == keccak256(abi.encodePacked(recipient))) {
+                result[index] = _db[i];
+                index++;
+            }
+        }
+
+        return result;
+    }
+
+    function attestationsByAttester(address attester) external view returns (Attestation[] memory) {
+        uint256 count = 0;
+        for (uint256 i = 1; i < lastUid; i++) {
+            if (_db[i].attester == attester) {
+                count++;
+            }
+        }
+
+        Attestation[] memory result = new Attestation[](count);
+        uint256 index = 0;
+        for (uint256 i = 1; i < lastUid; i++) {
+            if (_db[i].attester == attester) {
+                result[index] = _db[i];
+                index++;
+            }
+        }
+
+        return result;
+    }
+    
+
 }

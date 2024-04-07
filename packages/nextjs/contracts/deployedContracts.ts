@@ -207,7 +207,7 @@ const deployedContracts = {
   },
   245022926: {
     YourContract: {
-      address: "0x670233A7d72AFdB4A5b4e8dEC29ECf8d980B11b6",
+      address: "0x23B4df0d68827C1cFa1654D9473117139B3658CB",
       abi: [
         {
           inputs: [
@@ -317,6 +317,118 @@ const deployedContracts = {
             },
           ],
           stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "attester",
+              type: "address",
+            },
+          ],
+          name: "attestationsByAttester",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "uid",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "time",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "revocationTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "recipient",
+                  type: "string",
+                },
+                {
+                  internalType: "address",
+                  name: "attester",
+                  type: "address",
+                },
+                {
+                  internalType: "bool",
+                  name: "revocable",
+                  type: "bool",
+                },
+                {
+                  internalType: "string",
+                  name: "data",
+                  type: "string",
+                },
+              ],
+              internalType: "struct YourContract.Attestation[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "recipient",
+              type: "string",
+            },
+          ],
+          name: "attestationsByRecipient",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "uid",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "time",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "revocationTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "recipient",
+                  type: "string",
+                },
+                {
+                  internalType: "address",
+                  name: "attester",
+                  type: "address",
+                },
+                {
+                  internalType: "bool",
+                  name: "revocable",
+                  type: "bool",
+                },
+                {
+                  internalType: "string",
+                  name: "data",
+                  type: "string",
+                },
+              ],
+              internalType: "struct YourContract.Attestation[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {

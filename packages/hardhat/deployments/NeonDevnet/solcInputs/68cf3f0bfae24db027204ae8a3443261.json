@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/YourContract.sol": {
+      "content": "//SPDX-License-Identifier: MIT\npragma solidity >=0.8.0 <0.9.0;\n\nerror AccessDenied();\nerror NotFound();\nerror AlreadyRevoked();\nerror Irrevocable();\n\n\n// Use openzeppelin to inherit battle-tested implementations (ERC20, ERC721, etc)\n// import \"@openzeppelin/contracts/access/Ownable.sol\";\n// Events: a way to emit log statements from smart contract that can be listened to by external parties\n// Constructor: Called once on contract deployment\n// Check packages/hardhat/deploy/00_deploy_your_contract.ts\n/// @title SolAttest\n/// @notice The Solana Attestations protocol.\n\ncontract YourContract {\n    uint256 constant EMPTY_UID = 0;\n    uint64 constant NO_EXPIRATION_TIME = 0;\n\taddress public immutable owner;\n\n    /// @notice Emitted when an attestation has been made.\n    /// @param recipient The recipient of the attestation.\n    /// @param attester The attesting account.\n    /// @param uid The UID the revoked attestation.\n\n    event Attested(address indexed attester, string indexed recipient, uint256 uid);\n\n    /// @notice Emitted when an attestation has been revoked.\n    /// @param recipient The recipient of the attestation.\n    /// @param attester The attesting account.\n    /// @param uid The UID the revoked attestation.\n    event Revoked(string indexed recipient, address indexed attester, uint256 uid);\n\n    struct Attestation {\n        uint256 uid; // A unique identifier of the attestation.\n        uint256 time; // The time when the attestation was created (Unix timestamp).\n        uint256 revocationTime; // The time when the attestation was revoked (Unix timestamp).\n        string recipient; // The recipient of the attestation.\n        address attester; // The attester/sender of the attestation.\n        bool revocable; // Whether the attestation is revocable.\n        string data; // Custom attestation data.\n    }\n\n    // The global mapping between attestations and their UIDs.\n    uint256 private lastUid = 1;\n\n    mapping(uint256 uid => Attestation attestation) private _db;\n\n    /// @dev Creates a new SolAttest instance.\n    constructor(address _owner) {\n\towner = _owner;\n\t}\n\n    /// @notice Attests to a specific schema.\n    /// @param recipient The recipient of the attestation.\n    /// @param revocable Whether the attestation is revocable.\n    /// @param data The custom attestation data.\n    /// @return The UID of the new attestation.\n    function attest(string memory recipient, bool revocable, string calldata data) external returns (uint256) {\n        uint256 _uid = lastUid++;\n        Attestation memory _attestation;\n\n        _attestation.uid = _uid;\n        _attestation.attester = msg.sender;\n        _attestation.recipient = recipient;\n        _attestation.data = data;\n        _attestation.time = block.timestamp;\n        _attestation.revocable = revocable;\n\n        _db[_uid] = _attestation;\n\n        emit Attested(msg.sender, recipient, _uid);\n\n        return _uid;\n    }\n\n    function revoke(uint256 uid) external {\n        Attestation storage attestation = _db[uid];\n\n        if (attestation.uid == 0) {\n            revert NotFound();\n        }\n\n        if (attestation.attester != msg.sender) {\n            revert AccessDenied();\n        }\n\n        if (attestation.revocationTime != 0) {\n            revert AlreadyRevoked();\n        }\n\n        if (!attestation.revocable) {\n            revert Irrevocable();\n        }\n\n        attestation.revocationTime = block.timestamp;\n    }\n\n    /// @notice Returns an existing attestation by UID.\n    /// @param uid The UID of the attestation to retrieve.\n    /// @return The attestation data members.\n    function getAttestation(uint256 uid) external view returns (Attestation memory) {\n        if (uid > lastUid) {\n            revert NotFound();\n        }\n        return _db[uid];\n    }\n\n    // Create a function and variables that allow for the retrieval of attestations by recipient\n    // Create a function and variables that allow for the retrieval of attestations by attester\n    function attestationsByRecipient(string memory recipient) external view returns (Attestation[] memory) {\n        uint256 count = 0;\n        for (uint256 i = 1; i < lastUid; i++) {\n            if (keccak256(abi.encodePacked(_db[i].recipient)) == keccak256(abi.encodePacked(recipient))) {\n                count++;\n            }\n        }\n\n        Attestation[] memory result = new Attestation[](count);\n        uint256 index = 0;\n        for (uint256 i = 1; i < lastUid; i++) {\n            if (keccak256(abi.encodePacked(_db[i].recipient)) == keccak256(abi.encodePacked(recipient))) {\n                result[index] = _db[i];\n                index++;\n            }\n        }\n\n        return result;\n    }\n\n    function attestationsByAttester(address attester) external view returns (Attestation[] memory) {\n        uint256 count = 0;\n        for (uint256 i = 1; i < lastUid; i++) {\n            if (_db[i].attester == attester) {\n                count++;\n            }\n        }\n\n        Attestation[] memory result = new Attestation[](count);\n        uint256 index = 0;\n        for (uint256 i = 1; i < lastUid; i++) {\n            if (_db[i].attester == attester) {\n                result[index] = _db[i];\n                index++;\n            }\n        }\n\n        return result;\n    }\n    \n\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
