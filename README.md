@@ -1,80 +1,38 @@
-# 🏗 Scaffold-ETH 2
+# Solattest
 
 <h4 align="center">
   <a href="https://docs.scaffoldeth.io">Documentation</a> |
   <a href="https://scaffoldeth.io">Website</a>
 </h4>
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+🧪 Built using Scaffold Eth 2. An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
 
 ⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+Goal
+The primary aim of Solattest is to develop a robust platform that revolutionizes how attestations are made within the blockchain ecosystem. Our platform is designed to enable users to make comprehensive comments on transactions, build detailed reports on recipients, attest to a wide array of events such as transactions, hyperlinks, addresses, and more, and facilitate easy search and retrieval of these attestations by name, issuer, or other criteria. This initiative strives to introduce a new layer of transparency and trust to blockchain interactions, empowering users with the tools they need to verify, report, and share critical information seamlessly.
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+How It Works
+Solattest is built upon a foundation of blockchain technology, leveraging smart contracts to allow users to create immutable and verifiable records of various events and entities. Users can:
 
-## Requirements
+Make Attestations: Users can attest to specific events, transactions, addresses, or any relevant information, embedding these attestations within the blockchain for permanence and universal accessibility.
 
-Before you begin, you need to install the following tools:
+Comment on Transactions: The platform enables users to append detailed comments to blockchain transactions, providing context, explanations, or any other relevant information that enhances understanding and trust.
 
-- [Node (>= v18.17)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+Build Reports: Solattest allows for the aggregation of individual attestations and comments into comprehensive reports on specific entities or events, aiding in due diligence, research, and transparency.
 
-## Quickstart
+Search and Retrieve: Through a user-friendly interface, individuals can search for and retrieve attestations and reports based on various criteria, making it easy to find reliable information on blockchain activities.
 
-To get started with Scaffold-ETH 2, follow the steps below:
+Why Solattest
+Solattest is inspired by the belief that the integrity of blockchain transactions and activities can be significantly enhanced through a structured system of attestations and reports. By providing a platform for these activities, we aim to:
 
-1. Clone this repo & install dependencies
+Enhance Transparency: Make the blockchain ecosystem more transparent, where activities can be easily understood and traced.
 
-```
-git clone https://github.com/scaffold-eth/scaffold-eth-2.git
-cd scaffold-eth-2
-yarn install
-```
+Build Trust: Increase trust among participants by providing a mechanism for verifying information and intentions.
 
-2. Run a local network in the first terminal:
+Facilitate Research: Aid in research and due diligence processes by organizing and making accessible detailed records on blockchain entities and transactions.
 
-```
-yarn chain
-```
+Empower Users: Give users the tools to share important information, warn about potential scams, and highlight notable transactions or events.
 
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
-
-3. On a second terminal, deploy the test contract:
-
-```
-yarn deploy
-```
-
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
-
-4. On a third terminal, start your NextJS app:
-
-```
-yarn start
-```
-
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
-
-Run smart contract test with `yarn hardhat:test`
-
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend in `packages/nextjs/pages`
-- Edit your deployment scripts in `packages/hardhat/deploy`
-
-## Documentation
-
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
-
-To know more about its features, check out our [website](https://scaffoldeth.io).
-
-## Contributing to Scaffold-ETH 2
-
-We welcome contributions to Scaffold-ETH 2!
-
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+Demo
+Check out the demo at https://solattest-c4g3v3iuc-mekails-projects.vercel.app/
