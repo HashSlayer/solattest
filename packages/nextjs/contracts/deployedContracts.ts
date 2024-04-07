@@ -207,7 +207,7 @@ const deployedContracts = {
   },
   245022926: {
     YourContract: {
-      address: "0x23B4df0d68827C1cFa1654D9473117139B3658CB",
+      address: "0xE788982322f8816E9Cd6EAdB2114ac25eC033B70",
       abi: [
         {
           inputs: [
@@ -309,6 +309,50 @@ const deployedContracts = {
             },
           ],
           name: "attest",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "recipient",
+              type: "string",
+            },
+            {
+              internalType: "bool",
+              name: "revocable",
+              type: "bool",
+            },
+            {
+              internalType: "string",
+              name: "data",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "tokenAddress",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "tokenAmount",
+              type: "uint256",
+            },
+            {
+              internalType: "address payable",
+              name: "destinationAddress",
+              type: "address",
+            },
+          ],
+          name: "attestWithToken",
           outputs: [
             {
               internalType: "uint256",

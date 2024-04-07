@@ -1,6 +1,10 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
+interface IERC20 {
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+}
+
 error AccessDenied();
 error NotFound();
 error AlreadyRevoked();
@@ -75,6 +79,40 @@ contract YourContract {
 
         return _uid;
     }
+
+        // Function to attest with token backing, sending tokens to a specified address
+    function attestWithToken(
+        string memory recipient, 
+        bool revocable, 
+        string calldata data, 
+        address tokenAddress, 
+        uint256 tokenAmount, 
+        address payable destinationAddress // Address to send the tokens to
+    ) external returns (uint256) {
+        // Token transfer logic
+        require(
+            IERC20(tokenAddress).transferFrom(msg.sender, destinationAddress, tokenAmount), 
+            "Token transfer failed"
+        );
+
+        // Attestation logic
+        uint256 _uid = lastUid++;
+        Attestation memory _attestation;
+
+        _attestation.uid = _uid;
+        _attestation.attester = msg.sender;
+        _attestation.recipient = recipient;
+        _attestation.data = data;
+        _attestation.time = block.timestamp;
+        _attestation.revocable = revocable;
+
+        _db[_uid] = _attestation;
+
+        emit Attested(msg.sender, recipient, _uid);
+
+        return _uid;
+    }
+
 
     function revoke(uint256 uid) external {
         Attestation storage attestation = _db[uid];
